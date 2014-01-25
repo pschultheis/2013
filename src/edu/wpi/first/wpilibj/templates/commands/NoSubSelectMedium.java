@@ -4,6 +4,7 @@
  */
 package edu.wpi.first.wpilibj.templates.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 /**
  *
  * @author Developer
@@ -18,6 +19,8 @@ public class NoSubSelectMedium extends CommandBase {
     // Called just before this Command runs the first time
     protected void initialize() {
         SmartDashboard.putBoolean("HighGoalSelect", false);
+        this.setTimeout(.25);
+        SmartDashboard.putNumber("wLeftMotorSpeed2", 48000);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -26,15 +29,17 @@ public class NoSubSelectMedium extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return true;
+        return this.isTimedOut();
     }
 
     // Called once after isFinished returns true
     protected void end() {
+        SmartDashboard.putNumber("wLeftMotorSpeed2", 0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+        this.end();
     }
 }

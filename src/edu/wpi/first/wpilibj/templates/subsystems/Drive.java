@@ -7,7 +7,6 @@ package edu.wpi.first.wpilibj.templates.subsystems;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.Gyro;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.templates.commands.DriveWithGamepad;
 
 /**
@@ -31,9 +30,10 @@ public class Drive extends PIDSubsystem {
         super("drive", Kp, Ki, Kd);
         driveLeftMotor = new Jaguar(1);
         driveRightMotor = new Jaguar(2);
-        LiveWindow.addActuator("drive", "Left Motor", driveLeftMotor);
-        LiveWindow.addActuator("drive", "Right Motor", driveRightMotor);
+        //LiveWindow.addActuator("drive", "Left Motor", driveLeftMotor);
+        //LiveWindow.addActuator("drive", "Right Motor", driveRightMotor);
         gyro = new Gyro(1);
+        gyro.setSensitivity(.007);
     }
     
     public void initDefaultCommand() {
@@ -49,7 +49,7 @@ public class Drive extends PIDSubsystem {
     }
     
     protected void usePIDOutput(double output) {
-        tankDrive(output, output * (-1));
+        tankDrive(output, output * (-1.0));
     }
     
     
@@ -71,6 +71,14 @@ public class Drive extends PIDSubsystem {
     {
         return gyro.getAngle();
     }
+    public double getLeftMotor()
+    {
+        return driveLeftMotor.get();
+    }
+    public double getRightMotor()
+    {
+        return driveRightMotor.get();
+    }
     
     /**
      * Tank drive implements two joystick driving.
@@ -81,9 +89,12 @@ public class Drive extends PIDSubsystem {
     public void tankDrive(double leftJoy, double rightJoy)
     {
         //set motor speeds
-        driveLeftMotor.set(leftJoy);
-        driveRightMotor.set(rightJoy*-1);
-        
+        driveLeftMotor.set(leftJoy*-1.0);             
+        //driveRightMotor.set(rightJoy*1.0);
+        driveRightMotor.set(rightJoy*-1.0);
+        //DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser1, 3, "" + driveLeftMotor.getRaw());
+        //DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser2, 4, "" + driveRightMotor.getRaw());
+        //DriverStationLCD.getInstance().updateLCD();
     }
     
      /**
@@ -97,6 +108,9 @@ public class Drive extends PIDSubsystem {
         // local variables to hold the computed PWM values for the motors
         double leftMotorSpeed;
         double rightMotorSpeed;
+        
+       // moveValue = limit(moveValue);
+       // rotateValue = limit(rotateValue);
 
         if (squaredInputs) {
             // square the inputs (while preserving the sign) to increase fine control while permitting full power
@@ -132,5 +146,14 @@ public class Drive extends PIDSubsystem {
 
         tankDrive(leftMotorSpeed, rightMotorSpeed);
     }
-
+    /*
+protected static double limit(double num) {
+        if (num > 1.0) {
+            return 1.0;
+        }
+        if (num < -1.0) {
+            return -1.0;
+        }
+        return num;
+    }*/
 }

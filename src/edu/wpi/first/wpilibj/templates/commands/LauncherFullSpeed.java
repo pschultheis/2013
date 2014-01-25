@@ -22,6 +22,11 @@ public class LauncherFullSpeed extends CommandBase {
         {
             launcher.disableSpeedControl();
         }
+        if(launcher.getVoltageControl())
+        {
+            launcher.disableVoltageControl();
+        }
+        launcher.jaguarCheckUp();
     }
 
     // Called repeatedly when this Command is scheduled to run

@@ -4,6 +4,7 @@
  */
 package edu.wpi.first.wpilibj.templates.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.templates.commands.CommandBase;
 /**
  *
  * @author Developer
@@ -19,7 +20,7 @@ public class NoSubSelectHigh extends CommandBase {
     protected void initialize() {
         SmartDashboard.putBoolean("HighGoalSelect", true);
         this.setTimeout(.25);
-        SmartDashboard.putNumber("wRightMotorSpeed2", 33000);
+        SmartDashboard.putNumber("wRightMotorSpeed2", 56000);
     }
 
     // Called repeatedly when this Command is scheduled to run

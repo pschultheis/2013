@@ -3,17 +3,18 @@
  * and open the template in the editor.
  */
 package edu.wpi.first.wpilibj.templates.subsystems;
-import edu.wpi.first.wpilibj.CANJaguar;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.can.CANTimeoutException;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.CANJaguar;
+import edu.wpi.first.wpilibj.can.CANTimeoutException;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.io.OutputStreamWriter;
 import javax.microedition.io.Connector;
 import com.sun.squawk.microedition.io.FileConnection;
+import edu.wpi.first.wpilibj.DriverStationLCD;
 import java.io.IOException;
 
  /**
@@ -49,7 +50,18 @@ public class Launcher extends Subsystem {
         LiveWindow.addActuator("launcher", "Sploosher Motor", sploosherMotor);
         lineSensor = new DigitalInput(1);
         
-        try{
+        this.CANConstruction();
+    }
+    public void initDefaultCommand() {
+        //setDefaultCommand(new MySpecialCommand());   
+    }
+    
+    
+    
+    
+    public void CANConstruction()
+    {
+       try{
             shooterMotorOne = new CANJaguar(3);
             LiveWindow.addActuator("launcher", "Shooting Motor One", shooterMotorOne);
             shooterMotorOne.getPowerCycled();
@@ -79,9 +91,8 @@ public class Launcher extends Subsystem {
         }
         setJaguarSettings();
     }
-    public void initDefaultCommand() {
-        //setDefaultCommand(new MySpecialCommand());   
-    }
+    
+    
     
     /**
      * sets the jaguar settings 
@@ -95,7 +106,7 @@ public class Launcher extends Subsystem {
             //shooterMotorOne.configEncoderCodesPerRev(2); // eventually ask the electronics people what this value is
             shooterMotorOne.configFaultTime(.5);
             shooterMotorOne.setPID(p, i, d); // instantiant p i and d, make them doubles, and give them values, these should be static finals
-            //shooterMotorOne.setSpeedReference(CANJaguar.SpeedReference.kEncoder); //add method setSpeedRefference
+            shooterMotorOne.setSpeedReference(CANJaguar.SpeedReference.kEncoder); //add method setSpeedRefference
             SmartDashboard.putBoolean("CANJaguar3", true);
         }
         catch(Exception e)
@@ -110,7 +121,7 @@ public class Launcher extends Subsystem {
             //shooterMotorTwo.configEncoderCodesPerRev(2); // eventually ask the electronics people what this value is
             shooterMotorTwo.configFaultTime(.5);
             shooterMotorTwo.setPID(p, i, d); // instantiant p i and d, make them doubles, and give them values, these should be static finals
-            //shooterMotorTwo.setSpeedReference(CANJaguar.SpeedReference.kEncoder); //add method setSpeedRefference
+            shooterMotorTwo.setSpeedReference(CANJaguar.SpeedReference.kEncoder); //add method setSpeedRefference
             SmartDashboard.putBoolean("CANJaguar4", true);
         }
         catch(Exception e)
@@ -152,11 +163,37 @@ public class Launcher extends Subsystem {
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
     
+    public void upSpeed(){
+        try{
+        shooterMotorOne.setX(shooterMotorOne.getX()+.2);
+        shooterMotorTwo.setX(shooterMotorOne.getX()+.2);
+        }catch(Exception e){
+            
+        }try{
+        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser3, 1,""+shooterMotorOne.getX());
+        DriverStationLCD.getInstance().updateLCD();
+        }catch(Exception e){
+    }  
+}
     
+    public void downSpeed(){
+        try{
+        shooterMotorOne.setX(shooterMotorOne.getX()-.2);
+        shooterMotorTwo.setX(shooterMotorOne.getX()-.2);
+        }catch(Exception e){
+            
+        }
+try{
+        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser3, 1,""+shooterMotorOne.getX());
+        DriverStationLCD.getInstance().updateLCD();
+
+}catch(Exception e){
+    }  
+}
     
     /**
      * sets the speed
@@ -168,7 +205,7 @@ public class Launcher extends Subsystem {
         try{
             //if(speed < 0.1)
             //{
-            if(speed < 1)
+            if(speed < 1.2)
             {
                 shooterMotorOne.setX(speed);
                 currentSpeed = speed;
@@ -176,26 +213,27 @@ public class Launcher extends Subsystem {
             {
                 //shooterMotorOne.setX(speed - 0.1);
                 //currentSpeed = speed - 0.1;
-                shooterMotorOne.setX(speed - 1);
-                currentSpeed = speed - 1;
+                shooterMotorOne.setX(speed - 1.2);
+                
                 
             }
             SmartDashboard.putBoolean("CANJaguar3", true);
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
             SmartDashboard.putBoolean("CANJaguar3", false);
         }
         
         try{
             shooterMotorTwo.setX(speed);
+            SmartDashboard.putNumber("MotorVoltage", speed);
             currentSpeed = speed;
             SmartDashboard.putBoolean("CANJaguar4", true);
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
             SmartDashboard.putBoolean("CANJaguar4", false);
         }
     }
@@ -216,10 +254,44 @@ public class Launcher extends Subsystem {
      * @return none
      * @author Elizabeth and Juliana
      */
-    public void enableSpeedControl()
+    public void enableVoltageControl()
     {
           try{
               shooterMotorOne.changeControlMode(CANJaguar.ControlMode.kVoltage);
+              shooterMotorOne.enableControl();
+              voltageControl = true;
+              SmartDashboard.putBoolean("CANJaguar3", true);
+              
+          }
+          catch(Exception e)
+          {
+              //e.printStackTrace();
+              SmartDashboard.putBoolean("CANJaguar3", false);
+          }
+          
+          try{
+              shooterMotorTwo.changeControlMode(CANJaguar.ControlMode.kVoltage);
+              shooterMotorTwo.enableControl();
+              voltageControl = true;
+              speedControl = false;
+              
+              SmartDashboard.putBoolean("CANJaguar4", true);
+              
+          }
+          catch(Exception e)
+          {
+              //e.printStackTrace();
+              SmartDashboard.putBoolean("CANJaguar4", false);
+          }
+    }
+    
+    
+    
+    
+    public void enableSpeedControl()
+    {
+          try{
+              shooterMotorOne.changeControlMode(CANJaguar.ControlMode.kSpeed);
               shooterMotorOne.enableControl();
               speedControl = true;
               SmartDashboard.putBoolean("CANJaguar3", true);
@@ -227,12 +299,12 @@ public class Launcher extends Subsystem {
           }
           catch(Exception e)
           {
-              e.printStackTrace();
+              //e.printStackTrace();
               SmartDashboard.putBoolean("CANJaguar3", false);
           }
           
           try{
-              shooterMotorTwo.changeControlMode(CANJaguar.ControlMode.kVoltage);
+              shooterMotorTwo.changeControlMode(CANJaguar.ControlMode.kSpeed);
               shooterMotorTwo.enableControl();
               speedControl = true;
               
@@ -241,10 +313,12 @@ public class Launcher extends Subsystem {
           }
           catch(Exception e)
           {
-              e.printStackTrace();
+              //e.printStackTrace();
               SmartDashboard.putBoolean("CANJaguar4", false);
           }
     }
+    
+    
     
     /**
      * stops speed control
@@ -262,7 +336,7 @@ public class Launcher extends Subsystem {
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
             SmartDashboard.putBoolean("CANJaguar3", false);
         }
         
@@ -274,10 +348,43 @@ public class Launcher extends Subsystem {
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
             SmartDashboard.putBoolean("CANJaguar4", false);
         }
     }
+    
+    
+    
+    public void disableVoltageControl() 
+    {
+        try{
+            shooterMotorOne.disableControl();
+            shooterMotorOne.changeControlMode(CANJaguar.ControlMode.kPercentVbus);
+            voltageControl = false;
+            SmartDashboard.putBoolean("CANJaguar3", true);
+        }
+        catch(Exception e)
+        {
+            //e.printStackTrace();
+            SmartDashboard.putBoolean("CANJaguar3", false);
+        }
+        
+        try{
+            shooterMotorTwo.disableControl();
+            shooterMotorTwo.changeControlMode(CANJaguar.ControlMode.kPercentVbus);
+            voltageControl = false;
+            speedControl = false;
+            SmartDashboard.putBoolean("CANJaguar4", true);
+        }
+        catch(Exception e)
+        {
+            //e.printStackTrace();
+            SmartDashboard.putBoolean("CANJaguar4", false);
+        }
+    }
+    
+    
+    
     /**
      * returns is speedControl is enabled or not
      * @param none
@@ -304,25 +411,47 @@ public class Launcher extends Subsystem {
         if(!speedControl&&!voltageControl)
         {
             return true;
-        }
-        try{
-           if(Math.abs(shooterMotorOne.getOutputVoltage()-shooterMotorOne.getX())<.1
-                   && Math.abs(shooterMotorTwo.getOutputVoltage()-shooterMotorTwo.getX())<.1)
-           {
-               atSpeed = true;
-           }
-           else
-           {
-               atSpeed = false;
-           }
-        }
-        catch(Exception e)
+        }else if(voltageControl)
         {
-           e.printStackTrace();
-           //SmartDashboard.putBoolean("Exception isAtSpeed CANJaguar 3 and 4", false);
-        }
+            try{
+                if(Math.abs(shooterMotorOne.getOutputVoltage()-shooterMotorOne.getX())<.1
+                    && Math.abs(shooterMotorTwo.getOutputVoltage()-shooterMotorTwo.getX())<.1)
+                {
+                    atSpeed = true;
+                }
+                else
+                {
+                    atSpeed = false;
+                }
+            }
+            catch(Exception e)
+            {
+               //e.printStackTrace();
+               //SmartDashboard.putBoolean("Exception isAtSpeed CANJaguar 3 and 4", false);
+            }
         
-        return atSpeed;
+            return atSpeed;
+        }else if(speedControl)
+        {
+            try{
+                if(Math.abs(shooterMotorOne.getSpeed()-shooterMotorOne.getX())<.1
+                    && Math.abs(shooterMotorTwo.getSpeed()-shooterMotorTwo.getX())<.1)
+                {
+                    atSpeed = true;
+                }
+                else
+                {
+                    atSpeed = false;
+                }
+            }
+            catch(Exception e)
+            {
+                //e.printStackTrace();
+                //SmartDashboard.putBoolean("Exception isAtSpeed CANJaguar 3 and 4", false);
+            }
+            return atSpeed;
+        }
+        return true;
     }
 
     
@@ -344,7 +473,7 @@ public class Launcher extends Subsystem {
         }
         catch(Exception e)
         {
-           e.printStackTrace();
+           //e.printStackTrace();
            SmartDashboard.putBoolean("CANJaguar3", false);
         }
         
@@ -355,13 +484,22 @@ public class Launcher extends Subsystem {
         catch(Exception e)
         {
             
-           e.printStackTrace();
+           //e.printStackTrace();
            SmartDashboard.putBoolean("CANJaguar4", false);
         }
         
         if(powerCycledOne == true && powerCycledTwo == true)
         {
             this.setJaguarSettings();
+            
+            if(voltageControl)
+            {
+                enableVoltageControl();
+            }else if(speedControl)
+            {
+                enableSpeedControl();
+            }
+            
             this.setSpeed(currentSpeed);
             
             
@@ -379,6 +517,53 @@ public class Launcher extends Subsystem {
      */
     public double distanceToSpeed(double distance)
     {
-        return 0.0;
+        double speedAtDistance = 0.0;
+        if(SmartDashboard.getBoolean("HighGoalSelect", true))
+        {
+            if(distance > 23)
+            {
+                speedAtDistance = ((0.0014056942)*(distance*distance)) - ((0.0529406169)*(distance)) + (6.57984131);
+                speedAtDistance = speedAtDistance + 0.4;
+            }else 
+            {
+                double firstOne = (1.0/(10.0*10.0*10.0*10.0*10.0));
+                double firstTwo = (distance*distance*distance*distance);
+                double firstThree = (2.4234824);
+                double firstFour = firstThree * firstOne;
+                double firstTerm = firstFour * firstTwo;
+                
+                
+                double secondTerm = ((.0036775644)*(distance*distance*distance));
+                double thirdTerm = ((.205570399)*(distance*distance));
+                double fourthTerm = ((4.950449389)*(distance));
+                double fifthTerm = (49.23641443);
+                
+                
+                
+                double first = firstTerm - secondTerm;
+                double second = first + thirdTerm;
+                double third = second - fourthTerm;
+                double fourth = third + fifthTerm;
+                speedAtDistance = fourth;
+                
+                //speedAtDistance = ((((2.4234824)*((1)/(10*10*10*10*10)))*(distance*distance*distance*distance)) - ((.0036775644)*(distance*distance*distance)) + ((.205570399)*(distance*distance)) - ((4.950449389)*(distance)) + (49.23641443));
+                //DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser5, 1, speedAtDistance + "");
+            }
+            
+            if(Math.abs(speedAtDistance) > 8.96)
+            {
+                speedAtDistance = 8.96;
+            }
+            DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser2, 1, speedAtDistance + "");
+            
+            DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser3, 1, distance + "");
+            DriverStationLCD.getInstance().updateLCD();
+            return speedAtDistance;
+        }else if(!SmartDashboard.getBoolean("HighGoalSelect"))
+        {
+            return speedAtDistance;
+        }
+        return speedAtDistance;
+        
     }
 } 

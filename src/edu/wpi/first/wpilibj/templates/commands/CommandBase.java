@@ -19,6 +19,8 @@ public abstract class CommandBase extends Command {
     public static Drive drive = new Drive();
     public static Launcher launcher = new Launcher();
     public static Climber climb = new Climber();//V01 1/24/13
+    public static Hanger hanger = new Hanger();
+    public static OurCompressor compressor = new OurCompressor();
     public static void init() {
         // This MUST be here. If the OI creates Commands (which it very likely
         // will), constructing it during the construction of CommandBase (from
@@ -29,6 +31,13 @@ public abstract class CommandBase extends Command {
 
         // Show what command your subsystem is running on the SmartDashboard
         SmartDashboard.putData(launcher);
+        SmartDashboard.putData(climb);
+        SmartDashboard.putData(hanger);
+        SmartDashboard.putData(drive);
+        SmartDashboard.putData(compressor);
+        
+        //SmartDashboard.putBoolean("OtherCam", true);
+        
     }
 
     public CommandBase(String name) {

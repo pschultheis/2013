@@ -19,15 +19,15 @@ public class LauncherSpeedAtDistance extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        if(launcher.getSpeedControl() == false)
+        if(launcher.getVoltageControl() == false)
         {
-            launcher.enableSpeedControl();
+            launcher.enableVoltageControl();
         }
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        double speed = launcher.distanceToSpeed(SmartDashboard.getNumber("distance", 0));
+        double speed = launcher.distanceToSpeed(SmartDashboard.getNumber("Distance", 0));
         launcher.setSpeed(speed);     
     }
 

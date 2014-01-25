@@ -28,11 +28,10 @@ public class Climber extends Subsystem //climb V01 1/26/13
     {
         super("climb");
        climbMotor = new Jaguar(5);
-       LiveWindow.addActuator("climber", "Cimber Motor", climbMotor);
+       //LiveWindow.addActuator("climber", "Cimber Motor", climbMotor);
        
        stinger = new Solenoid(3);
-       upGrip = new Solenoid(4);
-       downGrip = new Solenoid(5);
+
        
        outerSwitch = new DigitalInput(2);
        innerSwitch = new DigitalInput(3);
@@ -48,19 +47,19 @@ public class Climber extends Subsystem //climb V01 1/26/13
     }
     public void OpenUpClaw()
     {
-        upGrip.set(true);
+        //upGrip.set(true);
     }
     public void OpenDownClaw()
     {
-        downGrip.set(true);
+        //downGrip.set(true);
     }
     public void closeUpClaw()
     {
-        upGrip.set(false);
+        //upGrip.set(false);
     }
     public void CloseDownClaw()
     {
-        downGrip.set(false);
+        //downGrip.set(false);
     }
     public void stop()
     {
