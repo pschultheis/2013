@@ -34,11 +34,14 @@ public class DriveWithGamepad extends CommandBase {
         }
         else
         {
-            drive.arcadeDrive(oi.getMoveValue(), oi.getRotateValue(), true);
+            drive.arcadeDrive(oi.getMoveValue(), oi.getRotateValue(), false);
         }
         
         DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser1, 1, "lm: " + drive.getLeftMotor());
         DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser2, 1, "rm: " + drive.getRightMotor());
+        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser3, 1, "x: " + oi.getRotateValue());
+        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser4, 1, "y: " + oi.getMoveValue());
+        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser5, 1, "z: " + oi.getZValue());
         DriverStationLCD.getInstance().updateLCD();
     }
 
