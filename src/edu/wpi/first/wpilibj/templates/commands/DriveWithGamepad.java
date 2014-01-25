@@ -4,8 +4,6 @@
  */
 package edu.wpi.first.wpilibj.templates.commands;
 
-import edu.wpi.first.wpilibj.DriverStationLCD;
-
 /**
  *
  * @author Developer
@@ -26,23 +24,12 @@ public class DriveWithGamepad extends CommandBase {
     protected void execute() {
         if(Math.abs(oi.getZValue()) > 0)
         {
-            drive.tankDrive(oi.getZValue(), oi.getZValue());
-        }
-        else if(Math.abs(oi.getHalfMoveValue())+Math.abs(oi.getHalfRotateValue()) > 0.2)
-        {
-            drive.arcadeDrive(oi.getHalfMoveValue(), oi.getHalfRotateValue(), false);
+        drive.tankDrive(oi.getZValue(), oi.getZValue());
         }
         else
         {
-            drive.arcadeDrive(oi.getMoveValue(), oi.getRotateValue(), false);
+        drive.arcadeDrive(oi.getMoveValue(), oi.getRotateValue(), true);
         }
-        
-        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser1, 1, "lm: " + drive.getLeftMotor());
-        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser2, 1, "rm: " + drive.getRightMotor());
-        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser3, 1, "x: " + oi.getRotateValue());
-        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser4, 1, "y: " + oi.getMoveValue());
-        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser5, 1, "z: " + oi.getZValue());
-        DriverStationLCD.getInstance().updateLCD();
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -4,117 +4,81 @@ package edu.wpi.first.wpilibj.templates;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.templates.commands.*;
+import edu.wpi.first.wpilibj.templates.commands.DriveTurnToAngle;
 
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+    //// CREATING BUTTONS
+    // One type of button is a joystick button which is any button on a joystick.
+    // You create one by telling it which joystick it's on and which button
+    // number it is.
+    // Joystick stick = new Joystick(port);
+    // Button button = new JoystickButton(stick, buttonNumber);
+    
+    // Another type of button you can create is a DigitalIOButton, which is
+    // a button or switch hooked up to the cypress module. These are useful if
+    // you want to build a customized operator interface.
+    // Button button = new DigitalIOButton(1);
+    
+    // There are a few additional built in buttons you can use. Additionally,
+    // by subclassing Button you can create custom triggers and bind those to
+    // commands the same as any other Button.
+    
+    //// TRIGGERING COMMANDS WITH BUTTONS
+    // Once you have a button, it's trivial to bind it to a button in one of
+    // three ways:
+    
+    // Start the command when the button is pressed and let it run the command
+    // until it is finished as determined by it's isFinished method.
+    // button.whenPressed(new ExampleCommand());
+    
+    // Run the command while the button is being held down and interrupt it once
+    // the button is released.
+    // button.whileHeld(new ExampleCommand());
+    
+    // Start the command when the button is released  and let it run the command
+    // until it is finished as determined by it's isFinished method.
+    // button.whenReleased(new ExampleCommand());
+    
+    Joystick leftJoy = new Joystick(1);
+    Joystick rightJoy = new Joystick(2);
+    
+    Button button1 = new JoystickButton(leftJoy, 1);
     
     
     
-    Joystick xboxDriver = new Joystick(1);
-    Joystick xboxCoDriver = new Joystick(2);
+    Joystick xboxC = new Joystick(3);
     
-    Button Driverbutton1A = new JoystickButton(xboxDriver, 1);
-    Button Driverbutton2B = new JoystickButton(xboxDriver, 2);
-    Button Driverbutton3X = new JoystickButton(xboxDriver, 3);
-    Button Driverbutton4Y = new JoystickButton(xboxDriver, 4);
-    Button Driverbutton5LB = new JoystickButton(xboxDriver, 5);
-    Button Driverbutton6RB = new JoystickButton(xboxDriver, 6);
-    
-    Button Driverbutton7BACK = new JoystickButton(xboxDriver, 7);
-    Button Driverbutton8START = new JoystickButton(xboxDriver, 8);
-    
-    Button CoDriverbutton1A = new JoystickButton(xboxCoDriver, 1);
-    Button CoDriverbutton2B = new JoystickButton(xboxCoDriver, 2);
-    Button CoDriverbutton3X = new JoystickButton(xboxCoDriver, 3);
-    Button CoDriverbutton4Y = new JoystickButton(xboxCoDriver, 4);
-    Button CoDriverbutton5LB = new JoystickButton(xboxCoDriver, 5); //stop shooter
-    Button CoDriverbutton6RB = new JoystickButton(xboxCoDriver, 6); //start shooter
-    Button CoDriverbutton7BACK = new JoystickButton(xboxCoDriver, 7);
-    Button CoDriverbutton8START = new JoystickButton(xboxCoDriver, 8);
-    
-    Button CoDriverbutton9LeftJoy = new JoystickButton(xboxCoDriver, 9);
-    
-    public class AnalogRight extends Button
-    {
-        public boolean get()
-        {
-            return (xboxCoDriver.getRawAxis(3)<-0.5);
-            
-        }
-     
-    }
-    
-    AnalogRight CoDriverAnalogRight = new AnalogRight();
     
     public OI()
     {
-        
-        //Driverbutton1A.whenPressed(new DriveTurnToSetAngle2());
-        Driverbutton1A.whenPressed(new LauncherLowSpeed());
-//        Driverbutton2B.whenPressed(new LauncherAllStop());
-//        Driverbutton3X.whenPressed(new LauncherLowSpeed());
-//        Driverbutton4Y.whenPressed(new LauncherFullSpeed2());
-        //Driverbutton3X.whenPressed(new DriveTurnToAngle2(10)); //can be deleted after testing
-        //Driverbutton4Y.whenPressed(new DriveTurnToAngle2(-10)); //can be deleted after testing
-        Driverbutton5LB.whenPressed(new HangerClose());
-        Driverbutton6RB.whenPressed(new HangerOpen());
-        Driverbutton7BACK.whenPressed(new OurCompressorOff());
-        Driverbutton8START.whenPressed(new OurCompressorOn());
-        
-        
-        CoDriverbutton5LB.whenPressed(new LauncherAllStop());
-        CoDriverbutton6RB.whenPressed(new LauncherSpeedAtDistance());
-        CoDriverbutton2B.whenPressed(new LauncherMediumSpeed());
-        CoDriverbutton1A.whenPressed(new LauncherLowSpeed());
-        CoDriverbutton3X.whenPressed(new LauncherToSpeed(7.1));
-        //CoDriverbutton3X.whenPressed(new LauncherToSpeed(6.9));
-        CoDriverbutton4Y.whenPressed(new LauncherFullSpeed2());
-        
-        CoDriverAnalogRight.whenPressed(new LauncherShoot());
-        
-        CoDriverbutton9LeftJoy.whenPressed(new LauncherCANReset());
-        
-        CoDriverbutton7BACK.whenPressed(new NoSubSelectMedium());
-        CoDriverbutton8START.whenPressed(new NoSubSelectHigh());
-        
-        
-        
+        //button1.whenPressed(new DriveTurnToAngle(90.00));
+    }
+            
+    public double getLeftJoySpeed()
+    {
+        return leftJoy.getY();
     }
     
-    //public double getLeftJoySpeed()
-    //{
-   //     return leftJoy.getY();
-    //}
-    
-    //public double getRightJoySpeed()
-    //{
-    //    return rightJoy.getY();
-    //}
+    public double getRightJoySpeed()
+    {
+        return rightJoy.getY();
+    }
     
     public double getMoveValue()
     {
-        return xboxDriver.getY();
+        return xboxC.getY();
     }
     public double getRotateValue()
     {
-        return xboxDriver.getX();
+        return xboxC.getX()*-1;
     }
     public double getZValue()
     {
-        return xboxDriver.getZ()*.25;
-    }
-    
-    public double getHalfMoveValue()
-    {
-        return (xboxDriver.getRawAxis(5)/2.0);
-    }
-    public double getHalfRotateValue()
-    {
-        return ((xboxDriver.getRawAxis(4))*2.0/3.0);
+        return xboxC.getZ()*.25;
     }
 }
 

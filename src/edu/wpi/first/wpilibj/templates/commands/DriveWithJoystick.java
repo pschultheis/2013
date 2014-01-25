@@ -1,52 +1,41 @@
-
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package edu.wpi.first.wpilibj.templates.commands;
 
 /**
  *
- * @author bradmiller
+ * @author Developer
  */
-public class DriveTurnToAngle extends CommandBase {
-
-    double angle;
+public class DriveWithJoystick extends CommandBase {
     
-    public DriveTurnToAngle(double angle) {
+    public DriveWithJoystick() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
         requires(drive);
-        this.angle = angle;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        drive.resetGyro();
-        drive.setSetpoint(this.angle);
-        drive.enable();
-        
     }
         
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+        drive.tankDrive(oi.getLeftJoySpeed(), oi.getRightJoySpeed());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if(Math.abs(drive.getGyroAngle() - this.angle) < 20)
-        {
-            return true;    
-        }else
-        {
-            return false;
-        }
+        return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-        drive.disable();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-        drive.disable();
     }
 }
