@@ -22,15 +22,17 @@ public class DriveTurnToAngle extends CommandBase {
         drive.setSetpoint(this.angle);
         drive.enable();
         
+        
     }
         
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+        
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if(Math.abs(drive.getGyroAngle() - this.angle) < 20)
+        if(Math.abs(drive.getGyroAngle() - this.angle) < 2)
         {
             return true;    
         }else

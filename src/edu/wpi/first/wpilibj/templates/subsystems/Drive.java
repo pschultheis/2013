@@ -6,13 +6,13 @@ package edu.wpi.first.wpilibj.templates.subsystems;
 
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
-import edu.wpi.first.wpilibj.templates.commands.DriveWithJoystick;
 import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.templates.commands.DriveWithGamepad;
 
 /**
  *
- * @author Developer
+ * @author Andre Leone
  */
 public class Drive extends PIDSubsystem {
     // Put methods for controlling this subsystem
@@ -31,13 +31,15 @@ public class Drive extends PIDSubsystem {
         super("drive", Kp, Ki, Kd);
         driveLeftMotor = new Jaguar(1);
         driveRightMotor = new Jaguar(2);
+        LiveWindow.addActuator("drive", "Left Motor", driveLeftMotor);
+        LiveWindow.addActuator("drive", "Right Motor", driveRightMotor);
         gyro = new Gyro(1);
     }
     
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
-        setDefaultCommand(new DriveWithJoystick());
+        //setDefaultCommand(new DriveWithJoystick());
         setDefaultCommand(new DriveWithGamepad());
     }
     
@@ -50,24 +52,41 @@ public class Drive extends PIDSubsystem {
         tankDrive(output, output * (-1));
     }
     
+    
+    /**
+     * Reset Gyro
+     * This function sets the Gyro's reference point to 0.00 and to the position the Gyro is currently at.
+     */
     public void resetGyro()
     {
         gyro.reset();
     }
    
+    /**
+     * Getting The Gyro Angle
+     * This function returns the angle the Gyro is currently positioned at.
+     * @return A Decimal value of the angle the Gyro is currently positioned at.
+     */
     public double getGyroAngle()
     {
         return gyro.getAngle();
     }
     
+    /**
+     * Tank drive implements two joystick driving.
+     * This function lets you directly provide joystick values from any source.
+     * @param leftJoy The value to use for left motor speed.
+     * @param rightJoy The value to use for right motor speed and is negated within the method to account for change in polarity.
+     */
     public void tankDrive(double leftJoy, double rightJoy)
     {
+        //set motor speeds
         driveLeftMotor.set(leftJoy);
         driveRightMotor.set(rightJoy*-1);
         
     }
     
-        /**
+     /**
      * Arcade drive implements single stick driving.
      * This function lets you directly provide joystick values from any source.
      * @param moveValue The value to use for forwards/backwards

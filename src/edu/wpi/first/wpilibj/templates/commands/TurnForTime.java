@@ -4,36 +4,44 @@
  */
 package edu.wpi.first.wpilibj.templates.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.templates.commands.CommandBase;
-
 /**
  *
- * @author Developer
+ * @author andreleone
  */
-public class LauncherSpeedAtDistance extends CommandBase {
+public class TurnForTime extends CommandBase {
     
-    public LauncherSpeedAtDistance() {
-        requires(launcher);
+    double speedLeft;
+    double speedRight;
+    double time;
+    
+    public TurnForTime(double speed, double time) {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
+        requires(drive);
+        this.speedLeft = speed * -1;
+        this.speedRight = speed;
+        this.time = time;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        if(launcher.getSpeedControl() == false)
-        {
-            launcher.enableSpeedControl();
-        }
+        this.setTimeout(this.time);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        double speed = launcher.distanceToSpeed(SmartDashboard.getNumber("distance", 0));
-        launcher.setSpeed(speed);     
+        drive.tankDrive(this.speedLeft, this.speedRight);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        if(isTimedOut())
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
     }
 
     // Called once after isFinished returns true
